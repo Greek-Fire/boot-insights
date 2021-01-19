@@ -1,0 +1,16 @@
+---
+- name: remove old satellite cert
+  yum:
+    name: katello-ca-consumer*
+    state: absent
+
+- get_url:
+    url: https://sd-425s-whcy.nam.nsroot.net/pub/katello-ca-consumer-latest.noarch.rpm
+    dest: /tmp/
+    mode: 0644
+
+- name: install new satellite cert
+  yum:
+    name: /tmp/katello-ca-consumer-latest.noarch.rpm
+
+  when: remove_cert == true and ansible_hostname != satellite_server

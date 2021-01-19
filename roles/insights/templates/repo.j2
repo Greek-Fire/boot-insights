@@ -1,0 +1,61 @@
+# DO NOT DELTE, or alter any entries this file!
+# Appending to this file is authorized
+# This repo file will not affect your current patching cyle
+# No packages from these repos will be used during any yum/rpm operations
+# These empty repos are need for insights to report accurate CVE and RHSA data
+{% if ansible_distribution_major_version == '7' -%}
+[rhel-{{ ansible_distribution_major_version }}-server-rpms]
+enabled = 1
+name = empty_insights_server_repo
+skip_if_unavailable = 1
+keepcache = 0
+
+[rhel-{{ ansible_distribution_major_version }}-server-optional-rpms]
+enabled = 1
+name = Empty_insights_optional_repo
+skip_if_unavailable = 1
+keepcache = 0
+
+[rhel-server-rhscl-{{ ansible_distribution_major_version }}-rpms]
+enabled = 1
+name = Empty_insights_rhscl_repo
+skip_if_unavailable = 1
+keepcache = 0
+
+{% elif ansible_distribution_major_version == '6' %}
+[rhel-{{ ansible_distribution_major_version }}-server-rpms]
+enabled = 1
+name = Empty_insights_server_repo
+skip_if_unavailable = 1
+keepcache = 0
+
+[rhel-server-rhscl-{{ ansible_distribution_major_version }}-rpms]
+enabled = 1
+name = Empty_insights_rhscl_repo
+skip_if_unavailable = 1
+keepcache = 0
+
+[rhel-{{ ansible_distribution_major_version }}-server-optional-rpms]
+enabled = 1
+name = Empty_insights_optional_repo
+skip_if_unavailable = 1
+keepcache = 0
+
+[rhel-{{ ansible_distribution_major_version }}-server-debug-rpms]
+enabled = 1
+name = Empty_insights_debug_repo
+skip_if_unavailable = 1
+keepcache = 0
+
+[rhel-{{ ansible_distribution_major_version }}-server-extras-rpms]
+enabled = 1
+name = Empty_insights_extras_repo
+skip_if_unavailable = 1
+keepcache = 0
+
+[rhel-{{ ansible_distribution_major_version }}-server-rh-common-rpms]
+enabled = 1
+name = Empty_insights_rh_common_repo
+skip_if_unavailable = 1
+keepcache = 0
+{% endif -%}
