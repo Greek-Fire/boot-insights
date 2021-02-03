@@ -47,12 +47,7 @@ packages: ''
 
 skip: ''
 
-# set all when adding host to hostgroup
-# do not alter in this file
-satellite_bootstrap_username:  ''
-satellite_bootstrap_password:  ''
-satellite_bootstrap_hostgroup: ''
-
-# do not alter in this file
-# this var is set in the bootstrap credential located in Ansible Tower
-satellite_password: ''
+# set all when adding host to hostgroup. The satellite_username and satelliet_password are set in tower by a credential called bootstrap
+satellite_username:  ''
+satellite_password:  ''
+satellite_hostgroup: ''

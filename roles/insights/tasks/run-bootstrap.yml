@@ -22,13 +22,7 @@
     
 - name: no logs because a password was used
   set_fact:
-    foreman_arg: "{% if satellite_bootstrap_password != '' %} --login {{ satellite_bootstrap_username }} --password {{ satellite_bootstrap_password }} --hostgroup {{ satellite_bootstrap_hostgroup }} {% else %} --skip foreman {% endif %}"
-  no_log: true
-  when: satellite_password == ''
-
-- name: no logs because a password was used
-  set_fact:
-    foreman_arg: "{% if satellite_bootstrap_password != '' %} --login {{ satellite_bootstrap_username }} --password {{ satellite_bootstrap_password }} --hostgroup {{ satellite_bootstrap_hostgroup }} {% else %} --skip foreman {% endif %}"
+    foreman_arg: "{% if satellite_hostgroup != '' %} --login {{ satellite_username }} --password {{ satellite_password }} --hostgroup {{ satellite_hostgroup }} {% else %} --skip foreman {% endif %}"
   no_log: true
   when: satellite_password != ''
 

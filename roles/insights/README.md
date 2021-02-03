@@ -21,7 +21,14 @@ Role Variables
   - foreman
   - puppet
   - katello-agent
-  - katello-host-tools
+  - katello-host-tools  
+packages:                                                # Used to install packages via the boostrap script
+- insights-client 
+
+# set all when adding host to hostgroup. The satellite_username and satelliet_password are set in tower by a credential called bootstrap
+satellite_username:  ''
+satellite_password:  ''
+satellite_hostgroup: ''
 
 
 Example Playbook
