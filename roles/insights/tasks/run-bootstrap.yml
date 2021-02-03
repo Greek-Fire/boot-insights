@@ -1,0 +1,66 @@
+#
+#     Copyright 2018,2017 Red Hat, Inc
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
+#
+
+
+- name: join list
+  set_fact:
+    skip_arg:     "{% if skip != '' %} --skip {{skip | join(' --skip ') }} {% else %} {% endif %}"
+    packages_arg: "{% if packages != '' %} --install-packages {{ packages | join('--install-packages') }} {% else %} {% endif %}"  
+    
+- name: no logs because a password was used
+  set_fact:
+    foreman_arg: "{% if satellite_bootstrap_password != '' %} --login {{ satellite_bootstrap_username }} --password {{ satellite_bootstrap_password }} --hostgroup {{ satellite_bootstrap_hostgroup }} {% else %} --skip foreman {% endif %}"
+  no_log: true
+  when: satellite_password == ''
+
+- name: no logs because a password was used
+  set_fact:
+    foreman_arg: "{% if satellite_bootstrap_password != '' %} --login {{ satellite_bootstrap_username }} --password {{ satellite_bootstrap_password }} --hostgroup {{ satellite_bootstrap_hostgroup }} {% else %} --skip foreman {% endif %}"
+  no_log: true
+  when: satellite_password != ''
+
+- name: generate bootstrap.py arguments
+  set_fact:
+    bootstrap_args: "--server {{ satellite_server_hostname }} --organization '{{ satellite_org }}' --location '{{ satellite_location }}' -a '{{ activation_key }}'"
+  when: inventory_hostname != satellite_server_hostname
+
+- name: "show results in logs, no password needed"
+  block:
+  - name: run bootstrap.py with extra args
+    command: "python {{ bootstrap_target_path }}bootstrap.py {{ bootstrap_args }} {{ foreman_arg }} {{ skip_arg }} {{ packages_arg }}"
+    when: inventory_hostname != satellite_server_hostname and force | bool == false
+
+  - name: force bootstrap run with extra_args
+    command: "python {{ bootstrap_target_path }}bootstrap.py {{ bootstrap_args }} {{ foreman_arg }} {{ skip_arg }} {{ packages_arg }} --force "
+    when: inventory_hostname != satellite_server_hostname and force | bool == true
+  when: foreman_arg | lower | regex_search('--skip foreman')
+  
+- name: "do NOT show results in logs, A password was needed to add a host to a hostgroup"
+  no_log: true
+  block:
+  - name: run bootstrap.py with extra args
+    command: "python {{ bootstrap_target_path }}bootstrap.py {{ bootstrap_args }} {{ foreman_arg }} {{ skip_arg }} {{ packages_arg }}"
+    when: inventory_hostname != satellite_server_hostname and force | bool == false
+
+  - name: force bootstrap run with extra_args
+    command: "python {{ bootstrap_target_path }}bootstrap.py {{ bootstrap_args }} {{ foreman_arg }} {{ skip_arg }} {{ packages_arg }} --force "
+    when: inventory_hostname != satellite_server_hostname and force | bool == true
+  when: foreman_arg | lower | regex_search('--password')
+
+- name: remove bootstrap.py
+  file:
+    path: "{{ bootstrap_target_path }}/bootstrap.py"
+    state: absent

@@ -15,11 +15,7 @@
 #     limitations under the License.
 #
 
-- name: search for insights-client
-  package_facts:
-    manager: rpm
-  register: rpm_res
-  
+
 - name: delete redaction files
   file:
     state: absent

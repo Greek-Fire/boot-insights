@@ -16,7 +16,12 @@
 #
 
 - name: remove old satellite cert
-  include_tasks: remove_cert.yml
+  include_tasks: remove-cert.yml
+  when: insights_only | bool == false
+
+- name: run bootstrapt script
+  include_tasks: run-bootstrap.yml
+  when: insights_only | bool == false
 
 - name: install insights-client
   include_tasks: install-insights-client.yml

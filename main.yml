@@ -21,8 +21,5 @@
   become: true
   tasks:
   - include_role:
-      name: bootstrap
-    when: bootstrap
-  - include_role:
       name: insights
-    when: insights or bootstrap
+
